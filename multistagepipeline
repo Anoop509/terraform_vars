@@ -1,0 +1,95 @@
+trigger: none
+
+pool: anoopkapool
+
+stages:
+# ---------- Stage 1: Terraform Plan ----------
+- stage: Plan
+  displayName: "Terraform Plan"
+  jobs:
+  - job: TerraformPlan
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformTaskV4@5
+      displayName: "Terraform Init"
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/main'
+        backendServiceArm: 'Anoop_CICD'
+        backendAzureRmStorageAccountName: 'anoopkastorage'
+        backendAzureRmContainerName: 'anoopkacontainer'
+        backendAzureRmKey: 'anoopfinal.tfstate'
+
+    - task: TerraformTaskV4@5
+      displayName: "Terraform Plan"
+      inputs:
+        provider: 'azurerm'
+        command: 'plan'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/main'
+        environmentServiceNameAzureRM: 'Anoop_CICD'
+
+# ---------- Stage 2: Terraform Apply (Dev) ----------
+- stage: Apply_Dev
+  displayName: "Terraform Apply - Dev"
+  dependsOn: Plan
+  jobs:
+  - job: TerraformApplyDev
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformTaskV4@5
+      displayName: "Terraform Init"
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/main'
+        backendServiceArm: 'Anoop_CICD'
+        backendAzureRmStorageAccountName: 'anoopkastorage'
+        backendAzureRmContainerName: 'anoopkacontainer'
+        backendAzureRmKey: 'anoopfinal.tfstate'
+
+    - task: TerraformTaskV4@5
+      displayName: "Terraform Apply (Dev)"
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/main'
+        environmentServiceNameAzureRM: 'Anoop_CICD'
+        commandOptions: '--auto-approve'
+
+# ---------- Stage 3: Terraform Apply (Prod) ----------
+- stage: Apply_Prod
+  displayName: "Terraform Apply - Prod"
+  dependsOn: Apply_Dev
+  jobs:
+  - job: TerraformApplyProd
+    steps:
+    - task: TerraformInstaller@1
+      inputs:
+        terraformVersion: 'latest'
+
+    - task: TerraformTaskV4@5
+      displayName: "Terraform Init"
+      inputs:
+        provider: 'azurerm'
+        command: 'init'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/main'
+        backendServiceArm: 'Anoop_CICD'
+        backendAzureRmStorageAccountName: 'anoopkastorage'
+        backendAzureRmContainerName: 'anoopkacontainer'
+        backendAzureRmKey: 'anoopfinal.tfstate'
+
+    - task: TerraformTaskV4@5
+      displayName: "Terraform Apply (Prod)"
+      inputs:
+        provider: 'azurerm'
+        command: 'apply'
+        workingDirectory: '$(System.DefaultWorkingDirectory)/main'
+        environmentServiceNameAzureRM: 'Anoop_CICD'
+        commandOptions: '--auto-approve'
