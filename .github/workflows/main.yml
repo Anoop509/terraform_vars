@@ -1,0 +1,13 @@
+name: anoop-workflow
+on:
+  push:
+    branches:
+      -  'main'
+      -  'feature/**'
+jobs:
+  first_workflow:
+    name: "anoop's workflow"
+    runs-on: [self-hosted, Windows, X64]
+    steps: 
+      -  name: "anoop ka print"
+         run: echo Hello anoop!
