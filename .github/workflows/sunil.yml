@@ -11,6 +11,12 @@ jobs:
     steps:
       - name: Print some words about India
         run: echo " India is great"
+        run: echo " India is great"
+        run: echo " India is great one"
+        run: echo " India is great"
+        run: echo " India is greatest"
+        run: echo "Make India great again"
+         
  
 
   
