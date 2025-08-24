@@ -7,7 +7,7 @@ on:
 jobs:
   first_workflow:
     name: "anoop's workflow"
-    runs-on: [self-hosted, Windows, X64]
+    runs-on: [self-hosted, Windows, X64, anoopself]
     steps: 
       -  name: "anoop ka print"
          run: echo Hello anoop!
