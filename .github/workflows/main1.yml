@@ -11,4 +11,6 @@ jobs:
     runs-on: suniselfhost
     steps:
       - name: Print some words about India
-        run: echo " India is the greatest"
+        run: |
+           echo " India is the greatest"
+           echo " Anoop is a great Indian"
