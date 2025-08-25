@@ -1,54 +1,49 @@
-name: Terraform Deploy
+name: sunilkaworkflow
 
 on:
   push:
     branches:
-      - main
-      - feature/**
+      - 'main'
+      - 'feature/**'
 
 jobs:
-  terraform:
-    name: Terraform Apply
-    runs-on: self-hosted
+  my-forst-workflow:
+    name: sunilkifirstjob
+    runs-on: suniselfhost
     defaults:
       run:
-        working-directory: ./  # repo root, kyunki modules ../rg, ../sa, ../sc main ke bahar hain
+        working-directory: ./main
 
     steps:
-      - name: Checkout Repo
+      - name: Checkout repository
         uses: actions/checkout@v3
+
+      - name: Print some words about India
+        run: |
+          echo " India is the greatest"
+          echo " Anoop is a great Indian"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
         with:
-          terraform_version: 1.6.0
+          terraform_version: 1.2.0 # आप यहां अपना पसंदीदा संस्करण (preferred version) निर्दिष्ट कर सकते हैं
 
       - name: Terraform Init
-        run: terraform init
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          TF_IN_AUTOMATION: 1
-          TF_INPUT: false
+        run: terraform init -input=false
 
       - name: Terraform Plan
-        run: terraform plan -var rg_name="anoop_rg" -var location="eastus" -var sa_name="anoopkastorageacc" -var container_name="tfstate" -input=false
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          TF_IN_AUTOMATION: 1
-          TF_INPUT: false
+        run: terraform plan -input=false
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -var rg_name="anoop_rg" -var location="eastus" -var sa_name="anoopkastorageacc" -var container_name="tfstate" -input=false
-        env:
-          ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
-          ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
-          ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
-          ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
-          TF_IN_AUTOMATION: 1
-          TF_INPUT: false
+        run: terraform apply -auto-approve -input=false
+
+      # आपको सभी चरणों (steps) के लिए env ब्लॉक को दोहराने की आवश्यकता नहीं है
+      # इसके बजाय, आप env ब्लॉक को job स्तर पर परिभाषित कर सकते हैं
+      # ताकि सभी चरणों के लिए समान पर्यावरण चर उपलब्ध हों
+    env:
+      ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+      TF_IN_AUTOMATION: 1
+      TF_INPUT: false
