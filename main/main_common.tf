@@ -1,16 +1,19 @@
-terraform {
+terraform{
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
       version = "~> 3.0"
     }
   }
+  backend "azurerm" {
+    
+  }
 }
+
 provider "azurerm" {
   features {}
-  # Configure the Azure provider with the desired region    
-  subscription_id = "fb85801b-367a-4ef8-8b37-eaf7a1f71813"
-  
+  subscription_id = "177b7e12-5f03-4f63-bcd1-ed6d1d776bff"
+
 }
 
 variable "rg_name" {}
