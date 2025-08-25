@@ -9,10 +9,10 @@ on:
 jobs:
   my-forst-workflow:
     name: sunilkifirstjob 
-    runs-on: suniselfhost   # 👈 ye aapka self-hosted runner hai
+    runs-on: suniselfhost
     defaults:
       run:
-        working-directory: ./main   # 👈 yahi pe aapka main_common.tf aur terraform.tfvars hai
+        working-directory: ./main
 
     steps:
       - name: Checkout repository
@@ -27,12 +27,14 @@ jobs:
         uses: hashicorp/setup-terraform@v2
 
       - name: Terraform Init
-        run: terraform init
+        run: terraform init -input=false
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          TF_IN_AUTOMATION: 1
+          TF_INPUT: false
 
       - name: Terraform Plan
         run: terraform plan -input=false
@@ -41,11 +43,15 @@ jobs:
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          TF_IN_AUTOMATION: 1
+          TF_INPUT: false
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false 
+        run: terraform apply -auto-approve -input=false
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
           ARM_SUBSCRIPTION_ID: ${{ secrets.ARM_SUBSCRIPTION_ID }}
           ARM_TENANT_ID: ${{ secrets.ARM_TENANT_ID }}
+          TF_IN_AUTOMATION: 1
+          TF_INPUT: false
