@@ -1,14 +1,18 @@
-
 name: sunilkaworkflow
+
 on:
   push:
     branches:
       - 'main'
       - 'feature/**'
+
 jobs:
-  my-forst-workflow:
+  my-first-workflow:
     name: sunilkifirstjob 
     runs-on: suniselfhost
     steps:
-      - name: Print some words about India
-        run: echo " India is great"
+      - name: Print first line
+        run: echo "India is great"
+
+      - name: Print second line
+        run: echo "India is greatest"
