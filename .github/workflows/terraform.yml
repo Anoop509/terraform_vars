@@ -1,33 +1,30 @@
-name: sunilkaworkflow
+name: Terraform Deploy
 
 on:
   push:
     branches:
-      - 'main'
-      - 'feature/**'
+      - main
+      - feature/**
 
 jobs:
-  my-forst-workflow:
-    name: sunilkifirstjob 
-    runs-on: suniselfhost
+  terraform:
+    name: Terraform Apply
+    runs-on: self-hosted
     defaults:
       run:
-        working-directory: ./main
+        working-directory: ./  # repo root, kyunki modules ../rg, ../sa, ../sc main ke bahar hain
 
     steps:
-      - name: Checkout repository
+      - name: Checkout Repo
         uses: actions/checkout@v3
-
-      - name: Print some words about India
-        run: |
-          echo " India is the greatest"
-          echo " Anoop is a great Indian"
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.6.0
 
       - name: Terraform Init
-        run: terraform init -input=false
+        run: terraform init
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -37,7 +34,7 @@ jobs:
           TF_INPUT: false
 
       - name: Terraform Plan
-        run: terraform plan -input=false
+        run: terraform plan -var rg_name="anoop_rg" -var location="eastus" -var sa_name="anoopkastorageacc" -var container_name="tfstate" -input=false
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
@@ -47,7 +44,7 @@ jobs:
           TF_INPUT: false
 
       - name: Terraform Apply
-        run: terraform apply -auto-approve -input=false
+        run: terraform apply -auto-approve -var rg_name="anoop_rg" -var location="eastus" -var sa_name="anoopkastorageacc" -var container_name="tfstate" -input=false
         env:
           ARM_CLIENT_ID: ${{ secrets.ARM_CLIENT_ID }}
           ARM_CLIENT_SECRET: ${{ secrets.ARM_CLIENT_SECRET }}
